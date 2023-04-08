@@ -22,8 +22,8 @@ class eval:
             self.items = {}
             for line in record:
                 for key in line:
-                    self.items[key] = items.get(key, 0) + 1
-            self.item_frequency = {v: k for k, v in items.items()}
+                    self.items[key] = self.items.get(key, 0) + 1
+            self.item_frequency = {v: k for k, v in self.items.items()}
             if n_items is not None:
                 self.items = set([self.item_frequency[key] for key in sorted(self.item_frequency)[-(n_items+1):-1]])
             elif min_frequency is not None:
