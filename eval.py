@@ -20,7 +20,7 @@ class eval:
             raise ValueError("Only one parameter can be specified")
         else:
             self.items = {}
-            for line in record:
+            for line in self.file:
                 for key in line:
                     self.items[key] = self.items.get(key, 0) + 1
             self.item_frequency = {v: k for k, v in self.items.items()}
@@ -72,7 +72,7 @@ class eval:
         for i in tqdm(range(n)):
             x, y = self.eval_data(pred_pct)
             output = []
-            for inputs in x:
+            for i in tqdm(range(n)):
                 out = predictor(inputs, n_output)
                 output.append(out)
             metric = self.evalute(output)
