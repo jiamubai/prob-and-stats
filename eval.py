@@ -13,8 +13,8 @@ class eval:
             record.append(lines)
         return record
     
-    def filter_file(self, n_items=None, min_frequency=None):
-        if n_items is None and min_frequency is None:
+    def filter_file(self, n_items=None, min_frequency=None, random=False, items=None):
+        if n_items is None and min_frequency is None and items is None:
             raise ValueError("Both parameters cannot be None")
         elif n_items is not None and min_frequency is not None:
             raise ValueError("Only one parameter can be specified")
@@ -24,8 +24,15 @@ class eval:
                 for key in line:
                     self.items[key] = self.items.get(key, 0) + 1
             self.item_frequency = {v: k for k, v in self.items.items()}
+            if items is not None:
+                self.items = items
             if n_items is not None:
-                self.items = set([self.item_frequency[key] for key in sorted(self.item_frequency)[-(n_items+1):-1]])
+                if random == True:
+                    import random
+                    keys = list(self.items.keys())
+                    self.items = set([self.item_frequency[key] for i in np.random.choice(len(keys), n_items, replace=False)])
+                else:
+                    self.items = set([self.item_frequency[key] for key in sorted(self.item_frequency)[-(n_items+1):-1]])
             elif min_frequency is not None:
                 self.items = set([self.item_frequency[key] for key in sorted(self.item_frequency) if key > min_frequency])
             for i in range(len(self.file)):
@@ -77,19 +84,7 @@ class eval:
                 output.append(out)
             metric = self.evalute(output)
             metrics.append(metric[1])
-        return self.confidence_interval(metrics)     
-    
-def plot_hist_metrics(metrics):
-    import seaborn as sns
-    import matplotlib.pyplot as plt
-    sns.displot(, kde=True, bins=15)
-    plt.show()
-    
-    
-def random_predictor(x, n_out):
-    n_out = 50
-    out = random.sample(validation.items, n_outs)
-    return out
+        return self.confidence_interval(metrics)   
 
 '''
 validation = eval('eval.txt')
