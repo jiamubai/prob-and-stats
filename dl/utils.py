@@ -59,15 +59,16 @@ def read_file(path):
     return record
 train_data = read_file('train.txt')
 
-def filter_file(file, n_items=None, random=False):
+def filter_file(file, n_items=None, random_sample=False):
     items = {}
     for line in file:
         for key in line:
             items[key] = items.get(key, 0) + 1
+    item_frequency = {v: k for k, v in items.items()}
     if n_items is not None:
-        if random == True:
+        if random_sample == True:
             keys = list(items.keys())
-            items = set([item_frequency[key] for i in np.random.choice(len(keys), n_items, replace=False)])
+            items = set(random.sample(keys, n_items))
         else:
             sorted_dictionary = sorted(items.items(), key=lambda x: x[1], reverse=True)
             items = set([x[0] for x in sorted_dictionary[:n_items]])
@@ -89,7 +90,7 @@ def flat_accuracy(preds, labels):
     return np.sum(pred_flat == labels_flat) / len(labels_flat)
 
 
-def accuracy(self, preds, labels):
+def accuracy(preds, labels):
     acc = []
     for i in range(len(labels)):
         label = set(labels[i])
